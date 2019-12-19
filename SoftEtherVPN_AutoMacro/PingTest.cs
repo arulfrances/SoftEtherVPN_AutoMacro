@@ -125,19 +125,30 @@ namespace SoftEtherVPN_AutoMacro
             byte[] buffer = ASCIIEncoding.ASCII.GetBytes(data);
             int timeout = 1000;
 
-            //IP 주소를 입력
-            PingReply reply = ping.Send(IPAddress.Parse(m_strTargetIP), timeout, buffer, options);
-
-            if (reply.Status == IPStatus.Success)
+            try
             {
-                m_nPingSpeed = (int)reply.RoundtripTime;
-                m_bResultOK = true;
-                if (m_pingThreadFinishEvent != null)
+                //IP 주소를 입력
+                PingReply reply = ping.Send(IPAddress.Parse(m_strTargetIP), timeout, buffer, options);
+
+                if (reply.Status == IPStatus.Success)
                 {
-                    m_pingThreadFinishEvent(this,m_nPingSpeed);
+                    m_nPingSpeed = (int)reply.RoundtripTime;
+                    m_bResultOK = true;
+                    if (m_pingThreadFinishEvent != null)
+                    {
+                        m_pingThreadFinishEvent(this,m_nPingSpeed);
+                    }
+                }
+                else
+                {
+                    m_bResultOK = false;
+                    if (m_pingThreadErrorEvent != null)
+                    {
+                        m_pingThreadErrorEvent(this, "Ping 실패");
+                    }
                 }
             }
-            else
+            catch(Exception)
             {
                 m_bResultOK = false;
                 if (m_pingThreadErrorEvent != null)

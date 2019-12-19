@@ -79,6 +79,7 @@ namespace SoftEtherVPN_AutoMacro
             ListView listView = new ListView(wndListView);
             int count = listView.ItemCount;
             List<VPNSERVERITEM> vpnServerList = new List<VPNSERVERITEM>();
+            Log(String.Format("[UpdateVpnServerList] ItemCount={0}", count));
 
             for (int i = 0; i < count; i++)
             {
@@ -102,6 +103,7 @@ namespace SoftEtherVPN_AutoMacro
 
             if (vpnServerList.Count == 0)
             {
+                Log(String.Format("Retrieved server list ItemCount={0}", count));
                 return;
             }
 
@@ -203,6 +205,14 @@ namespace SoftEtherVPN_AutoMacro
             }
 
             Thread.Sleep(500);
+            if(m_vpnServerList ==null)
+            {
+                Log("Current VpnServer List = null");
+            }
+            else
+            {
+                Log(String.Format("Current VpnServer List items={0}", m_vpnServerList.Count));
+            }
 
             if (m_vpnServerList ==null || m_vpnServerList.Count == 0 )
             {
