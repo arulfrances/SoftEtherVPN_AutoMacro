@@ -769,8 +769,31 @@ namespace SoftEtherVPN_AutoMacro
             IntPtr hWnd = Interop.FindWindow(null, "Connect Error - VPN Gate Connection");
             if (hWnd == IntPtr.Zero)
             {
-                Log("No windows found.. wait..");
                 timer1.Interval = 500;
+
+                hWnd = Interop.FindWindow(null, "SoftEther VPN Client Easy Manager");
+                if (hWnd != IntPtr.Zero)
+                {
+                    IntPtr hWnd2 = Interop.FindWindowEx(hWnd, IntPtr.Zero, "SysListView32", null);
+                    if (hWnd2 != IntPtr.Zero)
+                    {
+                        ListView listView = new ListView(hWnd2);
+                        if( listView.ItemCount == 0)
+                        {
+                            timer1.Interval = 10;
+                            m_procSequence = checkVpnClientEasyManager;
+                        }
+                    }
+                    else
+                    {
+                        Log("No windows found.. wait..");
+                    }
+                }
+                else
+                {
+                    Log("No windows found.. wait..");
+                }
+
                 return true;
             }
 
