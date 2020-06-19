@@ -110,24 +110,32 @@ namespace SoftEtherVPN_AutoMacro
             vpnServerList.Select(x => x.raw_ip).Distinct();
 
             List<String> FilterCountry = new List<string>();
-            // 필터 적용할 국가 선택
-            foreach (var item in vpnServerList)
+            if (checkBox1.Checked)
             {
-                if (FilterCountry.FindIndex(x => x.Equals(item.raw_country)) == -1)
+                // 필터 적용할 국가 선택
+                foreach (var item in vpnServerList)
                 {
-                    FilterCountry.Add(item.raw_country);
+                    if (FilterCountry.FindIndex(x => x.Equals(item.raw_country)) == -1)
+                    {
+                        FilterCountry.Add(item.raw_country);
+                    }
                 }
+
+                // 필터 국가를 FilterCountry에서 제거.
+                foreach (String item in listBox1.Items)
+                {
+                    int idx = FilterCountry.FindIndex(x => x.Equals(item));
+                    if (idx >= 0)
+                    {
+                        FilterCountry.RemoveAt(idx);
+                    }
+                }
+            }
+            else
+            {
+                FilterCountry.Clear();
             }
 
-            // 필터 국가를 FilterCountry에서 제거.
-            foreach (String item in listBox1.Items)
-            {
-                int idx = FilterCountry.FindIndex(x => x.Equals(item));
-                if( idx >=0)
-                {
-                    FilterCountry.RemoveAt(idx);
-                }
-            }
 
             // 남은 국가의 아이템을 모두 삭제
             foreach (String item in FilterCountry)
@@ -954,7 +962,7 @@ namespace SoftEtherVPN_AutoMacro
                 return;
             }
 
-            String val = comboBox1.SelectedText;
+            String val = comboBox1.Items[comboBox1.SelectedIndex].ToString();
             val.Trim();
 
             int idx = listBox1.FindString(val);
